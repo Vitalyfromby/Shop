@@ -1,0 +1,34 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+
+{% block content %}
+
+    <h1>{% if selected_category %}{{ selected_category.name }}{% else %}Products{% endif %}</h1>
+    <div class="row row-cols-3">
+        {% for product in products %}
+        <div class="card" style="width: 18rem;">
+            <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.price }}Руб.</p>
+                <a href="{{ product.get_absolute_url }}" class="btn btn-primary">Описание</a>
+                <form class="form-inline" action="{% url 'cart:cart_add' product.id %}" method="post">
+                    <div class="form-group mb-2">
+                        {{ cart_product_form }}
+                        {% csrf_token %}
+                    </div>
+                    <input type="submit" class="btn btn-primary mb-2" value="Add to cart">
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}

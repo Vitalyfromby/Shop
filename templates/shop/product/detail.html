@@ -1,0 +1,57 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Products{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row border">
+            <div class="col-md-6 border-right">
+                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" class="card-img-top" alt="...">
+            </div>
+            <div class="col-md-3">
+                <h3 class="text-body">{{ product.name }}</h3>
+                <p class="text-secondary">{{ product.id }}</p>
+                <p>{% if product.available %}В наличии{% else %}Под заказ{% endif %}</p>
+                <p class="text-success">{{ product.price }}Руб.</p>
+                <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                    {{ cart_product_form }}
+                    {% csrf_token %}
+                    <input type="submit" value="Add to cart">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h4 class="text-body">Описание товара</h4>
+                <p class="empty"></p>
+                <p class="text-body">{{ product.description }}</p>
+                <h4 class="text-body">Характеристики</h4>
+                <p class="empty"></p>
+            </div>
+
+            <div class="col-md-3">
+
+            </div>
+        </div>
+
+    </div>
+
+    <h1>{% if selected_category %}{{ selected_category.name }}{% else %}Products{% endif %}</h1>
+    {% for product in products %}
+    <div class="card" style="width: 18rem;">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">{{ product.price }}Руб.</p>
+            <a href="{{ product.get_absolute_url }}" class="btn btn-primary">Go somewhere</a>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock %}
