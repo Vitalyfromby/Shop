@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .utilities import send_activation_notification
-from .models import Category, Product, Customer
+from .models import Category, Product, Customer, Brand
 import datetime
 
 
@@ -14,9 +14,9 @@ admin.site.register(Category, CategoryAdmin)
 
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['name', 'slug', 'price', 'stock', 'available', 'created', 'updated']
+    list_display = ['name', 'slug', 'price', 'stock', 'available', 'created', 'updated', 'brand']
     list_filter = ['available', 'created', 'updated']
-    list_editable = ['price', 'stock', 'available']
+    list_editable = ['price', 'stock', 'available', 'brand']
     prepopulated_fields = {'slug': ('name',)}
 
 
@@ -62,10 +62,17 @@ class AdvUserAdmin(admin.ModelAdmin):
     list_filter = (NonactivatedFilter,)
     fields = (('username', 'email'), ('first_name', 'last_name'),
               ('send_messages', 'is_active', 'is_activated'), ('is_staff', 'is_superuser'),
-              'groups', 'user_permissions', ('last_login', 'date_joined'))
+              'groups', 'user_permissions', ('last_login', 'date_joined', 'discount'))
     readonly_fields = ('last_login', 'date_joined')
     actions = (send_activation_notifications,)
 
 
 admin.site.register(Customer, AdvUserAdmin)
+
+
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+
+admin.site.register(Brand, BrandAdmin)
 

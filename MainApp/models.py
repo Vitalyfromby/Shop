@@ -10,6 +10,10 @@ from .utilities import send_activation_notification
 class Customer(AbstractUser):
     is_activated = models.BooleanField(default=True, db_index=True, verbose_name='Прошел активацию?')
     send_messages = models.BooleanField(default=True, verbose_name='Рекламная рассылка')
+    discount = models.DecimalField(default=0, max_digits=3, decimal_places=1)
+    city = models.CharField(null=True, default=None, max_length=100)
+    address = models.CharField(null=True, default=None, max_length=250)
+    postal_code = models.CharField(null=True, default=None, max_length=20)
 
     class Meta(AbstractUser.Meta):
         pass
@@ -30,6 +34,16 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('product_list', args=[self.slug])
 
+class Brand(models.Model):
+    name = models.CharField(max_length=200, db_index=True)
+
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'Бренд'
+        verbose_name_plural = 'Бренды'
+
+    def __str__(self):
+        return self.name
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
@@ -42,6 +56,7 @@ class Product(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    brand = models.ForeignKey(Brand, null=True, default=None, on_delete=models.PROTECT, related_name='brand')
 
     class Meta:
         ordering = ('name',)

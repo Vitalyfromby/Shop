@@ -19,7 +19,7 @@
         <tbody>
         {% for item in cart %}
             {% with product=item.product %}
-                <tr>
+                <tr class="border">
                     <td>
                         <a href="{{ product.get_absolute_url }}">
                             <img src="
@@ -38,10 +38,15 @@
                 </tr>
             {% endwith %}
         {% endfor %}
-        <tr class="total">
-            <td>Total</td>
+        <tr class="Discount:">
+            <td>Total discount:</td>
             <td colspan="4"></td>
-            <td class="num">{{ cart.get_total_price }} Руб.</td>
+            <td class="num">{{ customer_discount }} Руб.</td>
+        </tr>
+        <tr class="total">
+            <td>Total:</td>
+            <td colspan="4"></td>
+            <td class="num">{{ order_price }} Руб.</td>
         </tr>
         </tbody>
     </table>
